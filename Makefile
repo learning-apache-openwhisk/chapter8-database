@@ -3,6 +3,9 @@ include _config.mk
 all: 
 	echo TODO
 
+
+bind: bind.done
+
 bind.done: 
 	wsk package bind /whisk.system/cloudant demodb \
 	-p username "$(CLOUDANT_USER)" \
@@ -17,4 +20,4 @@ unbind:
 	wsk package delete demodb
 	rm bind.done
 
-.PHONY:  bind unbind 
+.PHONY: bind unbind 
