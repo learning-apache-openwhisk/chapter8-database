@@ -1,0 +1,30 @@
+{
+   "_id" : "_design/sampleviews",
+   "views" : {
+      "names":  {
+        "map": "function(doc) { emit(doc.type, doc.name) }"
+      },
+      "persons": {
+         "map": "function(doc){ if(doc.type == 'person') emit(doc._id, doc.name) }"
+      },
+      "join": {
+        "map": "function(doc) { if(doc.type == 'computer') { emit(doc.owner, { _id: doc._id} ); emit(doc.owner, { _id: doc.owner }) } }"
+      },
+      "join2": {
+        "map": "function(doc) { if(doc.type == 'computer') { emit(doc.owner, { _id: doc.owner, name: doc.name, brand: doc.brand, memory: doc.memory }) } }"
+      },
+      "count": {
+        "map" : "function(doc){ emit(doc.type, 1)}",
+        "reduce": "function(key, values) { return sum(values) }"
+      },
+      "count2": {
+        "map" : "function(doc){ emit(doc._id)}",
+        "reduce": "_count"
+      },
+      "stats": {
+        "map" : "function(doc){ emit(doc._id, 1)}",
+        "reduce": "_stats"
+      }
+    }
+  } 
+  
