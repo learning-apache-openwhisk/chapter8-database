@@ -1,0 +1,8 @@
+{
+    "_id": "pc",
+    "type": "computer",
+    "name": "Pavillion",
+    "brand": "HP",
+    "owner": "miri",
+    "memory": 8
+}

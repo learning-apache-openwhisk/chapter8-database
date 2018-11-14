@@ -1,0 +1,8 @@
+{
+    "_id": "pc2",
+    "type": "computer",
+    "name": "m15",
+    "brand": "Alienware",
+    "owner": "mike",
+    "memory": 32
+}

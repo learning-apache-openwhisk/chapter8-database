@@ -1,0 +1,7 @@
+{ "selector": {
+    "$or": [
+      {"brand": { "$in": ["Apple", "Dell"] }},
+      {"memory": {"$gt": 16}}
+    ]
+  }
+}

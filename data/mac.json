@@ -1,0 +1,8 @@
+{
+    "_id": "mac",
+    "type": "computer",
+    "name": "MacBookPro",
+    "brand": "Apple",
+    "owner": "mike",
+    "memory": 16
+}
