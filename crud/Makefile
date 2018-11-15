@@ -1,5 +1,5 @@
 deploy: crud.zip crud.done
-	wsk action update crud/main crud.zip --kind python:3 --web true
+	wsk action update crud/main crud.zip -p db demodb --kind python:3 --web true
 	wsk action get crud/main --url
 
 crud.done:
@@ -8,7 +8,6 @@ crud.done:
 
 crud.zip: *.py
 	zip crud.zip *.py
-
 
 validate.done:
 	wsk action invoke demodb/create-document \

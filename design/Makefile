@@ -39,7 +39,7 @@ test-join-mike:
 test-join2: 
 	curl -su $(AUTH) "$(URL)/$(DB)/_design/sampleviews/_view/join2?include_docs=true" | jq .
 
-test-join2-mike:
-	curl -su $(AUTH) '$(URL)/$(DB)/_design/sampleviews/_view/join2?include_docs=true&key="mike"' | jq .
+test-join2-mac:
+	curl -su $(AUTH) '$(URL)/$(DB)/_design/sampleviews/_view/join2?include_docs=true&key="mac"' | jq .
 
 .PHONY: clean deploy
