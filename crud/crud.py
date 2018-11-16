@@ -1,12 +1,5 @@
 import crud
 import rest
-import website
-
-empty = {
-  "op": "save",
-  "name": "",
-  "email": ""
-}
 
 db = "demodb"
 dtype = "contact"
@@ -28,7 +21,7 @@ def delete(id_rev):
   return ret
 
 def update(args):
-  a = args["_id_rev"].split(":")
+  a = args["id"].split(":")
   doc = {
     "_id": a[0],
     "_rev": a[1],
@@ -49,8 +42,44 @@ def insert(args, id=None):
 def find(id=None):
   query = { "selector": {"type": dtype} }
   if id:
-    query["selector"]["_id"] = id
+    query["selector"]["_id"] = id.split(":")[0]
   ret = rest.whisk_invoke("%s/exec-query-find" % db, {"query": query})
   return ret
 
-    
+def test():
+    """
+    >>> import rest,crud,json
+    >>> rest.load_props()
+    >>> crud.db = "demodb"
+    >>> crud.dtype = "test"
+    >>> args = {"name": "Mike", "email":"msciab@gmail.com"}
+    >>> x = crud.insert(args)
+    >>> res = crud.find()
+    >>> fnd = res["docs"][0]
+    >>> print(fnd["name"])
+    Mike
+    >>> id_rev = "%s:%s" % (fnd["_id"], fnd["_rev"])
+    >>> args = { "id": id_rev, "name": "Michele", "email": fnd["email"] }
+    >>> x = crud.update(args)
+    >>> res = crud.find()
+    >>> fnd = res["docs"][0]
+    >>> print(fnd["name"])
+    Michele
+    >>> id_rev = "%s:%s" % (fnd["_id"], fnd["_rev"])
+    >>> args = {"name":"Miri","email":"miri@sc.com"}
+    >>> id = "test-miri"
+    >>> x = crud.insert(args, id)
+    >>> res = crud.find("test-miri")
+    >>> print(res["docs"][0]["name"])
+    Miri
+    >>> x = crud.delete(res["docs"][0]) 
+    >>> x = crud.delete(id_rev)
+    >>> res = crud.find()
+    >>> print(res["docs"])
+    []
+    """
+    pass
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()

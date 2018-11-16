@@ -25,25 +25,34 @@ def wrap(body):
 </html>
 """ % body
 
-def table():
+def rows(docs):
+  res = ""
+  for row in docs:
+    res += """
+<tr>
+  <td scope="row">
+   <input name="id" value="%s:%s" type="radio">
+  </td>
+  <td>%s</td>
+  <td>%s</td>
+</tr>
+    """ % (row["_id"], row["_rev"], row["name"], row["email"])
+  return res
+
+def table(data):
     res = """
 <form method="get">
  <table class="table">
- <thead>
+  <thead>
     <tr>
-    <th scope="col">#</th>
-    <th scope="col">Name</th>
-    <th scope="col">Email</th>
+     <th scope="col">#</th>
+     <th scope="col">Name</th>
+     <th scope="col">Email</th>
     </tr>
- </thead>
+  </thead>
  <tbody>"""
 
-    res +="""
-    <tr>
-    <td scope="row"><input type="radio"></td>
-    <td>Name</td>
-    <td>Email</td>
-    </tr>"""
+    res += rows(data)
 
     res += """
     <tr>
@@ -60,9 +69,11 @@ def table():
     return res
 
 def form(args):
-    return """
-<form method="get">
-  <input type="hidden" name="op" value="%s">
+    id = ""
+    if "_id" in args and "_rev" in args:
+      id = """<input type="hidden" name="id" value="%s:%s">""" % (args["_id"], args["_rev"])
+    return """<form method="get">%s
+  <input type="hidden" name="op" value="save">
   <div class="form-group">
     <label for="usr">Name:</label>
     <input type="text" class="form-control" 
@@ -75,20 +86,29 @@ def form(args):
   </div>
   <button type="submit" class="btn btn-default">Save</button>
 </form>    
-    """ % (args["op"], args["name"], args["email"])
+    """ % (id, args["name"], args["email"])
 
+empty = {
+  "op": "save",
+  "name": "",
+  "email": ""
+}
 
 def main(args):
-    global db
     if "db" in args:
       crud.db = args["db"]
     op = args.get("op")
     if  op == "new":
-        return { "body": website.wrap(website.form(empty)) }
-
+        return { "body": wrap(form(empty)) }
     if op == "edit":
-      pass
-
+      rec = crud.find(args["id"])
+      return { "body": wrap(form(rec["docs"][0])) }
     if op == "save":
-      insert(args)
-    return { "body": website.wrap(website.table(find())) }
+      if "id" in args:
+        crud.update(args)
+      else:
+        crud.insert(args)
+    if op == "delete":
+        crud.delete(args["id"])
+    data = crud.find()["docs"]
+    return { "body": wrap(table(data)) }
