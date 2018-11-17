@@ -31,12 +31,12 @@ def rows(docs):
     res += """
 <tr>
   <td scope="row">
-   <input name="id" value="%s:%s" type="radio">
+   <input name="id" value="%s" type="radio">
   </td>
   <td>%s</td>
   <td>%s</td>
 </tr>
-    """ % (row["_id"], row["_rev"], row["name"], row["email"])
+    """ % (row["id"], row["name"], row["email"])
   return res
 
 def table(data):
@@ -70,8 +70,8 @@ def table(data):
 
 def form(args):
     id = ""
-    if "_id" in args and "_rev" in args:
-      id = """<input type="hidden" name="id" value="%s:%s">""" % (args["_id"], args["_rev"])
+    if "id" in args:
+      id = """<input type="hidden" name="id" value="%s">""" % (args["id"])
     return """<form method="get">%s
   <input type="hidden" name="op" value="save">
   <div class="form-group">
@@ -88,27 +88,30 @@ def form(args):
 </form>    
     """ % (id, args["name"], args["email"])
 
-empty = {
-  "op": "save",
-  "name": "",
-  "email": ""
-}
+def fill(args):
+  res = { }
+  if "id" in args: res["id"]=args["id"]
+  res["name"] = args.get("name", "")
+  res["email"] = args.get("email", "")
+  return res
 
 def main(args):
     if "db" in args:
       crud.db = args["db"]
     op = args.get("op")
     if  op == "new":
-        return { "body": wrap(form(empty)) }
+        return { "body": wrap(form(fill({}))) }
     if op == "edit":
-      rec = crud.find(args["id"])
-      return { "body": wrap(form(rec["docs"][0])) }
+      res = crud.find(args["id"])
+      rec = res["docs"][0]
+      return { "body": wrap(form(rec)) }
     if op == "save":
       if "id" in args:
-        crud.update(args)
+        crud.update(fill(args))
       else:
-        crud.insert(args)
+        crud.insert(fill(args))
     if op == "delete":
-        crud.delete(args["id"])
+        if "id" in args:
+          crud.delete(args["id"])
     data = crud.find()["docs"]
     return { "body": wrap(table(data)) }

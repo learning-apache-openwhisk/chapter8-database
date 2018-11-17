@@ -1,4 +1,4 @@
-deploy: crud.zip crud.done
+deploy: crud.zip crud.done validate.done
 	wsk action update crud/main crud.zip -p db demodb --kind python:3 --web true
 	wsk action get crud/main --url
 
