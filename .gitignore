@@ -1,4 +1,6 @@
+.DS_Store
 _*
 *.done
 *.zip
 *.pyc
+__pycache__
