@@ -1,5 +1,6 @@
 .DS_Store
-_*
+_*.mk
+_*.json
 *.done
 *.zip
 *.pyc
