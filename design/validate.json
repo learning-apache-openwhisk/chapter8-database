@@ -1,0 +1,4 @@
+{
+  "_id": "_design/validate",
+  "validate_doc_update": "function (doc, old, ctx) {\n    if(doc.type && doc.type == \"contact\") {\n        if(!doc.name) {\n            throw({forbidden: \"name required\"})\n        }\n        if(!doc.email) {\n            throw({forbidden: \"email required\"})           \n        }\n        var re = /\\S+@\\S+\\.\\S+/;\n        if(!re.test(doc.email)) {\n            throw({forbidden: \"not an email\"})        \n        }\n    }\n} "
+}

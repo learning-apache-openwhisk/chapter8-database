@@ -11,7 +11,7 @@
         "map": "function(doc) { if(doc.type == 'computer') { emit(doc.owner, { _id: doc._id} ); emit(doc.owner, { _id: doc.owner }) } }"
       },
       "join2": {
-        "map": "function(doc) { if(doc.type == 'computer') { emit(doc._id, mama{ _id: doc.owner, name: doc.name, brand: doc.brand, memory: doc.memory }) } }"
+        "map": "function(doc) { if(doc.type == 'computer') { emit(doc._id, { _id: doc.owner, name: doc.name, brand: doc.brand, memory: doc.memory }) } }"
       },
       "count": {
         "map" : "function(doc){ emit(doc.type, 1)}",
