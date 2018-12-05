@@ -17,8 +17,8 @@
         "map" : "function(doc){ emit(doc.type, 1)}",
         "reduce": "function(key, values) { return sum(values) }"
       },
-      "count2": {
-        "map" : "function(doc){ emit(doc._id)}",
+      "ncomputer": {
+        "map" : "function(doc){ if(doc.type == 'computer') emit(doc._id)}",
         "reduce": "_count"
       },
       "stats": {

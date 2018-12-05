@@ -20,6 +20,12 @@ validate.done: validate.json
 	curl -su $(AUTH) -X PUT $(URL)/$(DB)/_design/validate \
 	-d @validate.json  >validate.done
 
+index.done:
+	! test -e index.done
+	curl -su $(AUTH) -X POST $(URL)/$(DB)/_index \
+	-H "Content-Type: application/json" \
+	-d @index.json  >index.done
+
 clean:
 	curl -u $(AUTH) -X DELETE $(URL)/$(DB)/_design/sampleviews?rev=$(shell jq -r .rev sampleviews.done)
 	curl -u $(AUTH) -X DELETE $(URL)/$(DB)/_design/validate?rev=$(shell jq -r .rev validate.done)
